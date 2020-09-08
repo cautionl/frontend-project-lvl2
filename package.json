@@ -1,0 +1,28 @@
+{
+  "name": "frontend-project-lvl2",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cautionl/frontend-project-lvl2.git"
+  },
+  "author": "Vladimir Basalaev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cautionl/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/cautionl/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "eslint": "^7.8.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
+  },
+  "dependencies": {
+    "commander": "^6.1.0"
+  }
+}
