@@ -1,32 +1,41 @@
 import _ from 'lodash';
 import fs from 'fs';
+import yaml from 'js-yaml';
 
-const getData = (filepath) => JSON.parse(fs.readFileSync(filepath));
+const getJson = (filepath) => JSON.parse(fs.readFileSync(filepath));
+const getYaml = (filepath) => yaml.safeLoad(fs.readFileSync(filepath));
 
-const getResult = (entries, data, data1) => {
-  let result = '';
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key of entries) {
-    if (_.has(data, key) && _.has(data1, key)) {
-      if (data[key] === data1[key]) {
-        result += `${key}: ${data[key]}\n`;
-      } else if (data[key] !== data1[key]) {
-        result += `-${key}: ${data[key]}\n+${key}: ${data1[key]}\n`;
-      }
-    } else if (!_.has(data, key)) {
-      result += `+${key}: ${data1[key]}\n`;
-    } else if (!_.has(data1, key)) {
-      result += `-${key}: ${data[key]}\n`;
-    }
+const getData = (filepath) => {
+  if (filepath.split('.')[1] === 'json') {
+    return getJson(filepath);
   }
-  return `{\n${result}}`;
+  return getYaml(filepath);
+}
+
+const buildString = (key, data1, data2) => {
+  if (_.has(data1, key) && _.has(data2, key)) {
+    if (data1[key] === data2[key]) {
+      return `${key}: ${data1[key]}\n`;
+    } if (data1[key] !== data2[key]) {
+      return `-${key}: ${data1[key]}\n+${key}: ${data2[key]}\n`;
+    }
+  } else if (!_.has(data1, key)) {
+    return `+${key}: ${data2[key]}\n`;
+  } else if (!_.has(data2, key)) {
+    return `-${key}: ${data1[key]}\n`;
+  }
 };
 
-const genDiff = (filepath, filepath1) => {
-  const data = getData(filepath);
+const getResult = (data1, data2) => {
+  const keys = [...new Set([...Object.keys(data1), ...Object.keys(data2)])].sort();
+  const result = keys.map((key) => buildString(key, data1, data2));
+  return `{\n${result.join('')}}`;
+};
+
+const genDiff = (filepath1, filepath2) => {
   const data1 = getData(filepath1);
-  const entries = [...new Set([...Object.keys(data), ...Object.keys(data1)])].sort();
-  return getResult(entries, data, data1);
+  const data2 = getData(filepath2);
+  return getResult(data1, data2);
 };
 
 export default genDiff;
