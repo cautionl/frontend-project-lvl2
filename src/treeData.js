@@ -4,8 +4,8 @@ const treeData = (data1, data2) => {
   const keys = [...new Set([...Object.keys(data1), ...Object.keys(data2)])].sort();
   const result = keys.map((currentKey) => {
     if (_.has(data1, currentKey) && _.has(data2, currentKey)) {
-      if (typeof data1[currentKey] === 'object' && typeof data2[currentKey] === 'object') {
-        return { key: currentKey, children: treeData(data1[currentKey], data2[currentKey]) };
+      if (_.isObject(data1[currentKey]) && _.isObject(data2[currentKey])) {
+        return { key: currentKey, children: treeData(data1[currentKey], data2[currentKey]), status: 'children' };
       }
       const result1 = { key: currentKey, value: data1[currentKey], status: 'unchanged' };
       const result2 = {
