@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
-const treeData = (data1, data2) => {
+const getTreeData = (data1, data2) => {
   const keys = [...new Set([...Object.keys(data1), ...Object.keys(data2)])].sort();
   const result = keys.map((currentKey) => {
     if (_.has(data1, currentKey) && _.has(data2, currentKey)) {
       if (_.isObject(data1[currentKey]) && _.isObject(data2[currentKey])) {
-        return { key: currentKey, children: treeData(data1[currentKey], data2[currentKey]), status: 'children' };
+        return { key: currentKey, children: getTreeData(data1[currentKey], data2[currentKey]), status: 'children' };
       }
       const result1 = { key: currentKey, value: data1[currentKey], status: 'unchanged' };
       const result2 = {
@@ -21,4 +21,4 @@ const treeData = (data1, data2) => {
   return result;
 };
 
-export default treeData;
+export default getTreeData;
