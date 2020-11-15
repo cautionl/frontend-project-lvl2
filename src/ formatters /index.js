@@ -2,16 +2,16 @@ import stylish from './stylish.js';
 import plain from './plain.js';
 import json from './json.js';
 
-// eslint-disable-next-line consistent-return
 const formatter = (tree, format) => {
-  if (format === 'stylish') {
-    return stylish(tree);
-  }
-  if (format === 'plain') {
-    return plain(tree);
-  }
-  if (format === 'json') {
-    return json(tree);
+  switch (format) {
+    case 'stylish':
+      return stylish(tree);
+    case 'plain':
+      return plain(tree);
+    case 'json':
+      return json(tree);
+    default:
+      throw new Error(`${format} is not defined`);
   }
 };
 

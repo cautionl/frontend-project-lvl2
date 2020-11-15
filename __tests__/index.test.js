@@ -15,7 +15,7 @@ describe('Stylish', () => {
   ${Json1} | ${Json2} | ${stylish}
   ${Yaml1} | ${Json2} | ${stylish}
   ${Json1} | ${Yaml2} | ${stylish}
-`('returns $expected when $a is added $b', ({ a, b, expected }) => {
+`('returns $expected differences between $a and $b', ({ a, b, expected }) => {
     expect(genDiff(a, b)).toBe(expected);
   });
 });
@@ -27,7 +27,7 @@ describe('Plain', () => {
   ${Json1} | ${Json2} | ${plain}
   ${Yaml1} | ${Json2} | ${plain}
   ${Json1} | ${Yaml2} | ${plain}
-`('returns $expected when $a is added $b', ({ a, b, expected }) => {
+`('returns $expected differences between $a and $b', ({ a, b, expected }) => {
     expect(genDiff(a, b, 'plain')).toBe(expected);
   });
 });
@@ -39,7 +39,7 @@ describe('Json', () => {
   ${Json1} | ${Json2} | ${json}
   ${Yaml1} | ${Json2} | ${json}
   ${Json1} | ${Yaml2} | ${json}
-`('returns $expected when $a is added $b', ({ a, b, expected }) => {
+`('returns $expected differences between $a and $b', ({ a, b, expected }) => {
     expect(genDiff(a, b, 'json')).toBe(expected);
   });
 });
