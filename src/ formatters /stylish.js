@@ -28,18 +28,18 @@ const stylish = (tree) => {
     const indent = ' '.repeat(space);
 
     const result = data.map((item) => {
-      if (item.status === 'add') {
+      if (item.type === 'add') {
         return `${indent}+ ${item.key}: ${createTab(item.value, enclosure)}`;
       }
-      if (item.status === 'del') {
+      if (item.type === 'del') {
         return `${indent}- ${item.key}: ${createTab(item.value, enclosure)}`;
       }
-      if (item.status === 'changed') {
+      if (item.type === 'changed') {
         const oldVal = `${indent}- ${item.key}: ${createTab(item.oldValue, enclosure)}`;
         const newVal = `${indent}+ ${item.key}: ${createTab(item.newValue, enclosure)}`;
         return `${oldVal}\n${newVal}`;
       }
-      if (item.status === 'unchanged') {
+      if (item.type === 'unchanged') {
         return `${indent}  ${item.key}: ${createTab(item.value, enclosure)}`;
       }
       return `${indent}  ${item.key}: ${iter(item.children, enclosure + 1)}`;

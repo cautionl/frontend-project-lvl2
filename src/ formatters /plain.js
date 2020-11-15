@@ -12,15 +12,15 @@ const createTab = (val) => {
 
 const plain = (treeData) => {
   const iter = (data, heir = null) => {
-    const resultsFiltered = data.filter((item) => item.status !== 'unchanged');
+    const resultsFiltered = data.filter((item) => item.type !== 'unchanged');
     const result = resultsFiltered.map((item) => {
       const newKey = heir ? `${heir}.${item.key}` : item.key;
       const newValue = createTab(item.value);
-      if (item.status === 'add') {
+      if (item.type === 'add') {
         return `Property '${newKey}' was added with value: ${newValue}`;
-      } if (item.status === 'del') {
+      } if (item.type === 'del') {
         return `Property '${newKey}' was removed`;
-      } if (item.status === 'changed') {
+      } if (item.type === 'changed') {
         return `Property '${newKey}' was updated. From ${createTab(item.oldValue)} to ${createTab(item.newValue)}`;
       }
       return iter(item.children, newKey);
