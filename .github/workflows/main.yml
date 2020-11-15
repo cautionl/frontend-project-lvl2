@@ -12,18 +12,25 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  eslint:
+  Linter and tests:
     runs-on: ubuntu-latest
     steps:
-      - name: my_repo
+      - name: My repo
         uses: actions/checkout@v1
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - name: npm install
+      - name: Install node package manager
         run: make install
-      - name: eslint
+      - name: Run linter
         run: make lint
-      - name: test
-        run: npm test
+      - name: Run tests
+        run: make test
+      - name: Test & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.4
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: make test-coverage
+          debug: true
