@@ -1,10 +1,14 @@
 import yaml from 'js-yaml';
 
-const parsing = (data, expansion) => {
-  if (expansion === '.json') {
-    return JSON.parse(data);
+const parse = (data, format) => {
+  switch (format) {
+    case '.json':
+      return JSON.parse(data);
+    case '.yaml':
+      return yaml.safeLoad(data);
+    default:
+      throw new Error(`${format} is not defined`);
   }
-  return yaml.safeLoad(data);
 };
 
-export default parsing;
+export default parse;

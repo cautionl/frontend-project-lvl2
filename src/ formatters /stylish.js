@@ -28,10 +28,10 @@ const stylish = (tree) => {
     const indent = ' '.repeat(space);
 
     const result = data.map((item) => {
-      if (item.type === 'add') {
+      if (item.type === 'added') {
         return `${indent}+ ${item.key}: ${createTab(item.value, enclosure)}`;
       }
-      if (item.type === 'del') {
+      if (item.type === 'removed') {
         return `${indent}- ${item.key}: ${createTab(item.value, enclosure)}`;
       }
       if (item.type === 'changed') {

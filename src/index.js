@@ -1,17 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import buildInternalTree from './internalTree.js';
-import parsing from './parsers.js';
+import parse from './parsers.js';
 import formatter from './ formatters /index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const readFile = (filepath) => fs.readFileSync(path.resolve(filepath), 'utf8');
 
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
-
-const getData = (filename) => parsing(readFile(filename), path.extname(filename));
+const getData = (filepath) => parse(readFile(filepath), path.extname(filepath));
 
 const genDiff = (filepath1, filepath2, format = 'stylish') => {
   const data1 = getData(filepath1);

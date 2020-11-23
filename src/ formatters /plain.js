@@ -16,9 +16,9 @@ const plain = (treeData) => {
     const result = resultsFiltered.map((item) => {
       const newKey = heir ? `${heir}.${item.key}` : item.key;
       const newValue = createTab(item.value);
-      if (item.type === 'add') {
+      if (item.type === 'added') {
         return `Property '${newKey}' was added with value: ${newValue}`;
-      } if (item.type === 'del') {
+      } if (item.type === 'removed') {
         return `Property '${newKey}' was removed`;
       } if (item.type === 'changed') {
         return `Property '${newKey}' was updated. From ${createTab(item.oldValue)} to ${createTab(item.newValue)}`;
