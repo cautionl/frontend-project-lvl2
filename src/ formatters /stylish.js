@@ -3,7 +3,7 @@ import _ from 'lodash';
 const linenIdent = 2;
 const enclosureSpace = 4;
 
-const createTab = (data, enclosure) => {
+const stringify = (data, enclosure) => {
   if (!_.isObject(data)) {
     return data;
   }
@@ -16,36 +16,35 @@ const createTab = (data, enclosure) => {
     if (!_.isObject(data[key])) {
       return `${indent}  ${key}: ${data[key]}`;
     }
-    return `${indent}  ${key}: ${createTab(data[key], enclosure + 1)}`;
+    return `${indent}  ${key}: ${stringify(data[key], enclosure + 1)}`;
   });
   const attachmentMargins = ' '.repeat(space - linenIdent);
   return `{\n${result.join('\n')}\n${attachmentMargins}}`;
 };
 
 const stylish = (tree) => {
-  const iter = (data, enclosure) => {
-    const space = enclosure * enclosureSpace + linenIdent;
+  const iter = (data, depth) => {
+    const space = depth * enclosureSpace + linenIdent;
     const indent = ' '.repeat(space);
 
     const result = data.map((item) => {
-      if (item.type === 'added') {
-        return `${indent}+ ${item.key}: ${createTab(item.value, enclosure)}`;
+      switch (item.type) {
+        case 'added':
+          return `${indent}+ ${item.key}: ${stringify(item.value, depth)}`;
+        case 'removed':
+          return `${indent}- ${item.key}: ${stringify(item.value, depth)}`;
+        case 'changed':
+          return `${indent}- ${item.key}: ${stringify(item.oldValue, depth)}\n${indent}+ ${item.key}: ${stringify(item.newValue, depth)}`;
+        case 'unchanged':
+          return `${indent}  ${item.key}: ${stringify(item.value, depth)}`;
+        case 'nested':
+          return `${indent}  ${item.key}: ${iter(item.children, depth + 1)}`;
+        default:
+          throw new Error(`${item.type} is not defined`);
       }
-      if (item.type === 'removed') {
-        return `${indent}- ${item.key}: ${createTab(item.value, enclosure)}`;
-      }
-      if (item.type === 'changed') {
-        const oldVal = `${indent}- ${item.key}: ${createTab(item.oldValue, enclosure)}`;
-        const newVal = `${indent}+ ${item.key}: ${createTab(item.newValue, enclosure)}`;
-        return `${oldVal}\n${newVal}`;
-      }
-      if (item.type === 'unchanged') {
-        return `${indent}  ${item.key}: ${createTab(item.value, enclosure)}`;
-      }
-      return `${indent}  ${item.key}: ${iter(item.children, enclosure + 1)}`;
     });
 
-    const attachmentMargins = ' '.repeat(enclosure * enclosureSpace);
+    const attachmentMargins = ' '.repeat(depth * enclosureSpace);
     return `{\n${result.join('\n')}\n${attachmentMargins}}`;
   };
 

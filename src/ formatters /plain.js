@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const createTab = (val) => {
+const stylish = (val) => {
   if (_.isObject(val)) {
     return '[complex value]';
   }
@@ -11,19 +11,23 @@ const createTab = (val) => {
 };
 
 const plain = (treeData) => {
-  const iter = (data, heir = null) => {
+  const iter = (data, ancestry = null) => {
     const resultsFiltered = data.filter((item) => item.type !== 'unchanged');
     const result = resultsFiltered.map((item) => {
-      const newKey = heir ? `${heir}.${item.key}` : item.key;
-      const newValue = createTab(item.value);
-      if (item.type === 'added') {
-        return `Property '${newKey}' was added with value: ${newValue}`;
-      } if (item.type === 'removed') {
-        return `Property '${newKey}' was removed`;
-      } if (item.type === 'changed') {
-        return `Property '${newKey}' was updated. From ${createTab(item.oldValue)} to ${createTab(item.newValue)}`;
+      const newKey = ancestry ? `${ancestry}.${item.key}` : item.key;
+      const newValue = stylish(item.value);
+      switch (item.type) {
+        case 'added':
+          return `Property '${newKey}' was added with value: ${newValue}`;
+        case 'removed':
+          return `Property '${newKey}' was removed`;
+        case 'changed':
+          return `Property '${newKey}' was updated. From ${stylish(item.oldValue)} to ${stylish(item.newValue)}`;
+        case 'nested':
+          return iter(item.children, newKey);
+        default:
+          throw new Error(`${item.type} is not defined`);
       }
-      return iter(item.children, newKey);
     });
 
     return result.join('\n');
