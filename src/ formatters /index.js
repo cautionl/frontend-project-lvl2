@@ -1,16 +1,18 @@
-import stylish from './stylish.js';
-import plain from './plain.js';
-import json from './json.js';
+import renderStylish from './stylish.js';
+import renderPlain from './plain.js';
+import renderJson from './json.js';
 
-const definitionOutputFormat = (tree, format) => {
-  switch (format) {
+const format = (tree, form) => {
+  switch (form) {
     case 'plain':
-      return plain(tree);
+      return renderPlain(tree);
     case 'json':
-      return json(tree);
+      return renderJson(tree);
+    case 'stylish':
+      return renderStylish(tree);
     default:
-      return stylish(tree);
+      throw new Error(`${format} is not defined`);
   }
 };
 
-export default definitionOutputFormat;
+export default format;

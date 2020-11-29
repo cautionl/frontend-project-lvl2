@@ -14,11 +14,11 @@ const plain = readFixture('plain.txt');
 const json = readFixture('json.txt');
 
 test.each([
-  ['json', 'json'],
-  ['yaml', 'yaml'],
-])('returns $expected differences between $a and $b', (format1, format2) => {
-  const filepath1 = getFixturePath(`one.${format1}`);
-  const filepath2 = getFixturePath(`two.${format2}`);
+  ['json'],
+  ['yaml'],
+])('returns $expected differences between $a and $b', (format) => {
+  const filepath1 = getFixturePath(`one.${format}`);
+  const filepath2 = getFixturePath(`two.${format}`);
   expect(genDiff(filepath1, filepath2)).toBe(stylish);
   expect(genDiff(filepath1, filepath2, 'plain')).toBe(plain);
   expect(genDiff(filepath1, filepath2, 'json')).toBe(json);
