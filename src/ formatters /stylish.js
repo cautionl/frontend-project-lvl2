@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
-const linenIdent = 2;
-const enclosureSpace = 4;
+const smallIdent = 2;
+const indent = 4;
 
-const createIndents = (depth) => {
-  const space = (depth * enclosureSpace) - linenIdent;
-  return ' '.repeat(space);
+const createIndent = (depth) => {
+  const indentCount = (depth * indent) + smallIdent;
+  return ' '.repeat(indentCount);
 };
 
 const stringify = (data, depth) => {
@@ -15,40 +15,39 @@ const stringify = (data, depth) => {
 
   const keys = Object.keys(data);
 
-  const result = keys.map((key) => `${createIndents(depth + 1)}  ${key}: ${stringify(data[key], depth + 1)}`);
+  const result = keys.map((key) => `${createIndent(depth + 1)}  ${key}: ${stringify(data[key], depth + 1)}`);
 
-  const attachmentMargins = ' '.repeat(depth * enclosureSpace);
+  const attachmentMargins = ' '.repeat((depth + 1) * indent);
   return `{\n${result.join('\n')}\n${attachmentMargins}}`;
 };
 
 const renderStylish = (tree) => {
   const iter = (data, depth) => {
-    const result = data.map((item) => {
-      switch (item.type) {
+    const result = data.map((noda) => {
+      switch (noda.type) {
         case 'added':
-          return `${createIndents(depth)}+ ${item.key}: ${stringify(item.value, depth)}`;
+          return `${createIndent(depth)}+ ${noda.key}: ${stringify(noda.value, depth)}`;
         case 'removed':
-          return `${createIndents(depth)}- ${item.key}: ${stringify(item.value, depth)}`;
-        case 'changed':
-          return `${createIndents(depth)}- ${item.key}: ${stringify(item.oldValue, depth)}\n${createIndents(depth)}+ ${item.key}: ${stringify(item.newValue, depth)}`;
+          return `${createIndent(depth)}- ${noda.key}: ${stringify(noda.value, depth)}`;
+        case 'changed': {
+          const oldValue = `${createIndent(depth)}- ${noda.key}: ${stringify(noda.oldValue, depth)}`;
+          const newValue = `${createIndent(depth)}+ ${noda.key}: ${stringify(noda.newValue, depth)}`;
+          return `${oldValue}\n${newValue}`;
+        }
         case 'unchanged':
-          return `${createIndents(depth)}  ${item.key}: ${stringify(item.value, depth)}`;
+          return `${createIndent(depth)}  ${noda.key}: ${stringify(noda.value, depth)}`;
         case 'nested':
-          return `${createIndents(depth)}  ${item.key}: ${iter(item.children, depth + 1)}`;
+          return `${createIndent(depth)}  ${noda.key}: ${iter(noda.children, depth + 1)}`;
         default:
-          throw new Error(`${item.type} is not defined`);
+          throw new Error(`${noda.type} is not defined`);
       }
     });
 
-    const attachmentMargins = ' '.repeat(depth * enclosureSpace);
-    console.log('--------');
-    console.log(depth);
-    console.log(data);
-    console.log('--------');
+    const attachmentMargins = ' '.repeat(depth * indent);
     return `{\n${result.join('\n')}\n${attachmentMargins}}`;
   };
 
-  return iter(tree, 1);
+  return iter(tree, 0);
 };
 
 export default renderStylish;
