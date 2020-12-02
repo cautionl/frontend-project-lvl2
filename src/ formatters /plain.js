@@ -10,10 +10,10 @@ const stringify = (val) => {
   return val;
 };
 
-const renderPlain = (treeData) => {
-  const iter = (data, ancestry = '') => {
-    const filtredResult = data.filter((item) => item.type !== 'unchanged');
-    const result = filtredResult.map((item) => {
+const renderPlain = (tree) => {
+  const internalTree = (data, ancestry = '') => {
+    const filtredTree = data.filter((item) => item.type !== 'unchanged');
+    const result = filtredTree.map((item) => {
       const property = ancestry ? `${ancestry}.${item.key}` : item.key;
       const newValue = stringify(item.value);
       switch (item.type) {
@@ -24,7 +24,7 @@ const renderPlain = (treeData) => {
         case 'changed':
           return `Property '${property}' was updated. From ${stringify(item.oldValue)} to ${stringify(item.newValue)}`;
         case 'nested':
-          return iter(item.children, property);
+          return internalTree(item.children, property);
         default:
           throw new Error(`${item.type} is not defined`);
       }
@@ -33,7 +33,7 @@ const renderPlain = (treeData) => {
     return result.join('\n');
   };
 
-  return iter(treeData);
+  return internalTree(tree);
 };
 
 export default renderPlain;

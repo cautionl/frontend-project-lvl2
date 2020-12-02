@@ -21,7 +21,7 @@ const stringify = (data, depth) => {
 };
 
 const renderStylish = (tree) => {
-  const iter = (data, depth) => {
+  const internalTree = (data, depth) => {
     const result = data.map((noda) => {
       switch (noda.type) {
         case 'added':
@@ -36,7 +36,7 @@ const renderStylish = (tree) => {
         case 'unchanged':
           return `${buildIndent(depth)}  ${noda.key}: ${stringify(noda.value, depth)}`;
         case 'nested':
-          return `${buildIndent(depth)}  ${noda.key}: ${iter(noda.children, depth + 1)}`;
+          return `${buildIndent(depth)}  ${noda.key}: ${internalTree(noda.children, depth + 1)}`;
         default:
           throw new Error(`${noda.type} is not defined`);
       }
@@ -45,7 +45,7 @@ const renderStylish = (tree) => {
     return `{\n${result.join('\n')}\n${' '.repeat(depth * indent)}}`;
   };
 
-  return iter(tree, 0);
+  return internalTree(tree, 0);
 };
 
 export default renderStylish;

@@ -2,8 +2,8 @@ import renderStylish from './stylish.js';
 import renderPlain from './plain.js';
 import renderJson from './json.js';
 
-const format = (tree, form) => {
-  switch (form) {
+const format = (tree, formatName) => {
+  switch (formatName) {
     case 'plain':
       return renderPlain(tree);
     case 'json':
@@ -11,7 +11,7 @@ const format = (tree, form) => {
     case 'stylish':
       return renderStylish(tree);
     default:
-      throw new Error(`${format} is not defined`);
+      throw new Error(`${formatName} is not defined`);
   }
 };
 

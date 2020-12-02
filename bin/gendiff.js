@@ -10,5 +10,5 @@ program
   .action((filepath1, filepath2) => {
     console.log(genDiff(filepath1, filepath2, program.format));
   })
-  .version('0.0.1', '-v, --version')
+  .version('1.0.0', '-v, --version')
   .parse(process.argv);
